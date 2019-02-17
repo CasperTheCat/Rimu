@@ -37,8 +37,8 @@ pip3 install pypandoc
 This can be done by adding the following to the meta document
 
 ```
-CJKsansfont: Noto Sans CJK JP Regular
-CJKmainfont: Noto Serif CJK JP Regular
+CJKsansfont: <CJK Sans-Serif Font>
+CJKmainfont: <CJK Serif Font>
 ```
 
 ## Koma
