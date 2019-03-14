@@ -52,6 +52,54 @@ def ParseMetadata(x):
 
     return ''.join(x[headerStart:headerEnd + 1]) + "\n\n", fileList
 
+
+def generateSubstitutes(x):
+    # x is keyvalue
+    keyvalue = {}
+    for xi in x:
+
+        sxi = xi.split("=")
+
+        if(len(sxi) == 2):
+            # Correct
+            safeKey = sxi[0].rstrip().lstrip()
+            safeValue = sxi[1].rstrip().lstrip()
+            print("[INFO] Registered Keyword \"" + safeKey + "\" will substitute out for \"" + safeValue + "\"")
+            keyvalue[safeKey] = safeValue
+
+    return keyvalue
+
+def markdownSubstitute(x, kv):
+    # load x
+    outLines = []
+    with codecs.open(x) as fileHandle:
+        lines = fileHandle.readlines()
+
+        for li in lines:
+
+            recurrentStr = li
+            for sub in kv:
+                recurrentStr = recurrentStr.replace(sub, kv[sub])
+
+            outLines.append(recurrentStr)
+
+  
+
+            
+
+    return ''.join(outLines) + "\n\n"
+# Handle Variable Sub
+variableSubstitutions = {}
+if(os.path.isfile("Substitute.md")):
+    try:
+        with codecs.open("Substitute.md") as vsub:
+            vsLines = vsub.readlines()
+            variableSubstitutions = generateSubstitutes(vsLines)
+    except Exception as e:
+        print(e)
+        print("Substitution file exists, but cannot be read. Exiting.")
+        sys.exit(-1)
+
 # Handle Meta
 metadata = ""
 meta = ""
@@ -64,7 +112,12 @@ metadata, chapterOrder = ParseMetadata(meta)
 
 
 for chapter in chapterOrder:
-    concatChapters += pypandoc.convert_file(chapter, "md")
+    if(chapter.endswith(".md")):
+        # Subbing is only enabled on markdown sources!
+        concatChapters += markdownSubstitute(chapter, variableSubstitutions)
+    else:
+        concatChapters += pypandoc.convert_file(chapter, "md")
+    
     concatChapters += '\n\n'
 
 temp = metadata + concatChapters
