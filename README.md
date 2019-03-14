@@ -2,7 +2,28 @@
 A latex build tool
 
 ## Meta Configuration
-Currently the Meta document is a pandoc header though I have plans for it.
+
+The Meta document is a pandoc header in addition to the chapter listing in the following form:
+
+```
+# Arc ...                               -- Used for ordering, and a few chapter count things
+ - <chaptername> <chapterlocation>      -- A chapter list is generated from the order here
+ - <chaptername> <chapterlocation>      -- Note, location is optional to allow placeholding
+```
+
+A future update will expand on the aforementioned functionality.
+
+## Substitution Configuration
+
+Text substitution can be enabled by supplying a file named `Substitute.md`.
+
+Substitution entries take the following form:
+
+```
+Original Text = Substitute
+```
+
+Note that the above will find every occurance of `Original Text`, regardless of the original document format, and replace it with `Substitute`.
 
 
 ## Setting Header and Text Font Families
