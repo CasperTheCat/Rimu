@@ -82,12 +82,15 @@ def markdownSubstitute(x, kv):
                 recurrentStr = recurrentStr.replace(sub, kv[sub])
 
             outLines.append(recurrentStr)
+    
+    return ''.join(outLines) + "\n\n"
 
   
-
+def markdownSubstituteInline(x, kv):
+    for sub in kv:
+        x = x.replace(sub, kv[sub])
+    return x
             
-
-    return ''.join(outLines) + "\n\n"
 # Handle Variable Sub
 variableSubstitutions = {}
 if(os.path.isfile("Substitute.md")):
@@ -112,12 +115,11 @@ metadata, chapterOrder = ParseMetadata(meta)
 
 
 for chapter in chapterOrder:
-    if(chapter.endswith(".md")):
+    #if(chapter.endswith(".md")):
         # Subbing is only enabled on markdown sources!
-        concatChapters += markdownSubstitute(chapter, variableSubstitutions)
-    else:
-        concatChapters += pypandoc.convert_file(chapter, "md")
-    
+    #    concatChapters += markdownSubstitute(chapter, variableSubstitutions)
+    #else:
+    concatChapters += markdownSubstituteInline(pypandoc.convert_file(chapter, "md"),variableSubstitutions)    
     concatChapters += '\n\n'
 
 temp = metadata + concatChapters
